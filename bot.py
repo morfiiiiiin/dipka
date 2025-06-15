@@ -17,13 +17,14 @@ if not aiogram.__version__.startswith("3"):
 
 # Инициализация
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7808847944:AAFTrarhuICx5MrIndS4yu4CvfVEUVhGg5w")
-WEBHOOK_HOST = os.getenv("WEBHOOK_HOST")  # Например, https://your-service.onrender.com
+WEBHOOK_HOST = os.getenv("WEBHOOK_HOST", "https://dipka.onrender.com")
 WEBHOOK_PATH = "/webhook"
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 router = Router()
+dp.include_router(router)  # Подключение роутера к диспетчеру
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -121,7 +122,7 @@ APPLIANCE_RECOMMENDATIONS = {
     "microwave": {
         "Panasonic": {
             "description": (
-                "Panasonic QuickHeat 25L (14 900 ₽, 1000W, компактный) — микроволновая печь с мощностью 1000 Вт и компактными размерами. Имеет автоматические программы для разогрева и разморозки. Подходит для небольших кухонь.\n"
+                "Panasonic QuickHeat 25L (14 900 ₽, 1000W, компактный) — микроволновая печь с эффективной мощностью 1000 Вт и компактными размерами. Имеет автоматические программы для разогрева и разморозки. Подходит для небольших кухонь.\n"
                 "Panasonic Inverter 32L (19 900 ₽, инверторная технология) — модель с инверторной технологией для равномерного нагрева. Объем 32 литра, сенсорное управление. Идеально для семей, готовящих сложные блюда."
             ),
             "photo_url": "https://example.com/panasonic_microwave.jpg"
@@ -149,7 +150,7 @@ APPLIANCE_RECOMMENDATIONS = {
         },
         "Whirlpool": {
             "description": (
-                "Whirlpool JetChef 25L (14 900 ₽, 900W, компактный) — микроволновка с функцией быстрого разогрева и автоматическими программами. Подходит для небольших семей.\n"
+                "Whirlpool JetCook 25L (14 900 ₽, 900W, компактный) — микроволновка с функцией быстрого разогрева и автоматическими программами. Подходит для небольших семей.\n"
                 "Whirlpool Max 30L (19 900 ₽, гриль, пароварка) — модель с функцией гриля и пароварки. Объем 30 литров, мощность 900 Вт. Идеально для здорового питания."
             ),
             "photo_url": "https://example.com/whirlpool_microwave.jpg"
@@ -159,35 +160,35 @@ APPLIANCE_RECOMMENDATIONS = {
         "Dyson": {
             "description": (
                 "Dyson V15 Detect Absolute (79 900 ₽, лазерное обнаружение пыли, 240AW) — беспроводной пылесос с лазерной подсветкой для обнаружения мелкой пыли. Мощность всасывания 240 Вт, время работы до 60 минут. Подходит для аллергиков и владельцев домашних животных.\n"
-                "Dyson V11 Animal (64 900 ₽, 185AW, до 60 мин) — модель с высокой мощностью и оптимизированными насадками для уборки шерсти. Идеально для домов с питомцами."
+                "Dyson V11 Animal (71 900 ₽, 185AW, до 60 мин) — модель с высокой эффективностью и оптимизированными насадками для уборки шерсти."
             ),
             "photo_url": "https://example.com/dyson_vacuum_cleaner.jpg"
         },
         "Philips": {
             "description": (
-                "Philips Series 8000 XC8349 (49 900 ₽, PowerCyclone 10, до 60 мин) — беспроводной пылесос с технологией PowerCyclone 10 для мощного всасывания. Имеет насадки для всех поверхностей. Подходит для больших домов.\n"
-                "Philips Aqua Plus XC8057 (39 900 ₽, влажная уборка) — модель с функцией влажной уборки и мощностью 180 Вт. Идеально для семей с детьми и аллергиков."
+                "Philips Series 800L XC8347 (49 900 ₽, PowerCyclone 10, 190AW) — беспроводной пылесос с технологией PowerCyclone 10 для мощного всасывания. Имеет насадки для всех поверхностей. Подходит для больших домов.\n"
+                "Philips Aqua Plus (39 900 ₽, влажная уборка) — модель с функцией влажной уборки и мощностью 180 Вт. Идеально для семей с детьми и аллергиков."
             ),
             "photo_url": "https://example.com/philips_vacuum_cleaner.jpg"
         },
         "Bosch": {
             "description": (
-                "Bosch Serie 8 BBH6ZOO25 (39 900 ₽, 25.2V, до 45 мин) — беспроводной пылесос с высокой мощностью и универсальными насадками. Подходит для уборки ковров и твердых полов.\n"
-                "Bosch Unlimited BCS611GB (34 900 ₽, 60 мин, AllFloor) — модель с длительным временем работы и компактным дизайном. Идеально для небольших квартир."
+                "Bosch Series 8 (39 900 ₽, 25.2V, до 40 мин) — беспроводной пылесос с высокой мощностью и универсальными насадками. Подходит для уборки ковров и твердых полов.\n"
+                "Bosch Unlimited (34 900 ₽, до 60 мин, AllFloor) — модель с высокой энергоэффективностью и компактным дизайном."
             ),
             "photo_url": "https://example.com/bosch_vacuum_cleaner.jpg"
         },
         "Haier": {
             "description": (
-                "Haier Cyclone 180W (29 900 ₽, 180W, до 40 мин) — бюджетный беспроводной пылесос с хорошей мощностью всасывания. Подходит для небольших квартир и быстрой уборки.\n"
-                "Haier AquaClean 200W (39 900 ₽, влажная уборка) — модель с функцией влажной уборки и HEPA-фильтром. Идеально для аллергиков и семей с детьми."
+                "Haier Cyclone 350H (29 900 ₽, 180W, до 40 мин) — бюджетный беспроводной пылесос с хорошей мощностью всасывания. Подходит для небольших квартир.\n"
+                "Haier AquaClean (39 900 ₽, влажная уборка) — модель с функцией влажной уборки и HEPA-фильтром."
             ),
             "photo_url": "https://example.com/haier_vacuum_cleaner.jpg"
         },
         "Whirlpool": {
             "description": (
-                "Whirlpool Cordless 150W (27 900 ₽, до 35 мин) — компактный пылесос с легким весом и хорошей маневренностью. Подходит для небольших помещений.\n"
-                "Whirlpool PowerClean 200W (44 900 ₽, 50 мин, HEPA-фильтр) — модель с высокой мощностью и фильтром HEPA для аллергиков. Идеально для тщательной уборки."
+                "Whirlpool Cordless 150W (27 900 ₽, до 45 мин) — компактный пылесос с легким весом и хорошей маневренностью. Подходит для небольших помещений.\n"
+                "Whirlpool PowerClean 300W (44 900 ₽, до 50 мин, фильтр) — модель с высокой мощностью и фильтрацией."
             ),
             "photo_url": "https://example.com/whirlpool_vacuum_cleaner.jpg"
         }
@@ -195,10 +196,10 @@ APPLIANCE_RECOMMENDATIONS = {
 }
 
 STORE_INFO = (
-    "ℹ️ Информация:\n"
+    "ℹ Информация:\n"
     "Часы работы: 00:00-24:00\n"
-    "Адрес: г. Москва, ул. Кирова, 4\n"
-    "Контакты: +7 (918) 488-60-36, support@konsultantbot.ru"
+    "Адрес: г. Москва, ул. Примерная, 3\n"
+    "Контакты: +7 (918) 123-45-67"
 )
 
 # FSM для обработки запросов к боту
@@ -206,73 +207,66 @@ class BotQuery(StatesGroup):
     waiting_for_query = State()
 
 # Временная заглушка для ответов бота
-FALLBACK_RESPONSES = {
+FALLBACK_USER = {
     "холодильник": (
-        "Рекомендую Samsung CoolFrost 300L (59 900 ₽, No Frost) — идеально для семьи из 3-4 человек, с тихой работой и зоной свежести. "
-        "Или LG SmartFridge 400L (79 900 ₽, с Wi-Fi) — для тех, кто любит умные технологии. "
+        "Рекомендую Samsung CoolFrost 300L (59 900 ₽, No Frost) — идеально для семьи из 3-4 человек, с тихой работой и зоной свежести.\n"
+        "Или LG SmartCook 400L (64 900 ₽, с Wi-Fi) — для тех, кто любит умные технологии.\n"
         "Какой бюджет и функции вам важны?"
     ),
-    "стиральная машина": (
-        "Советую Bosch EcoWash 7kg (49 900 ₽, тихая) — компактная и надежная, или Samsung AddWash 9kg (84 900 ₽) — с возможностью дозагрузки белья. "
-        "Какой объем загрузки вам нужен?"
-    ),
     "микроволновка": (
-        "Попробуйте Panasonic QuickHeat 25L (14 900 ₽, компактная) — для небольших кухонь, или Toshiba MultiCook 30L (19 900 ₽, с грилем) — для запекания. "
-        "Нужен гриль или сенсорное управление?"
-    ),
-    "пылесос": (
-        "Рекомендую Dyson V15 (79 900 ₽, мощный) — для аллергиков и владельцев животных, или Philips Aqua Plus (39 900 ₽) — с влажной уборкой. "
-        "Какой тип уборки предпочитаете?"
+        "Панасоник QuickHeat 25L (14 900 ₽, компактная) — для небольших кухонь.\n"
+        "Или Toshiba MultiCook 15L (19 900 ₽, с грилем) — для запекания.\n"
+        "Нужен ли гриль или сенсорное управление?"
     )
 }
 
 # Функция для ответов бота с Hugging Face
-async def get_bot_response(query: str) -> str:
+async def get_user_response(query: str) -> str:
     try:
         query_lower = query.lower()
         result = sentiment_analyzer(query)[0]
         score = result['score']
         label = result['label']
-        for appliance, response in FALLBACK_RESPONSES.items():
+        for appliance, response in FALLBACK_USER.items():
             if appliance in query_lower:
-                logger.info(f"Matched appliance: {appliance} for query: {query}")
-                return f"{response} (Настроение: {label}, уверенность: {score:.2f})"
-        logger.info(f"No appliance matched for query: {query}")
-        return f"Уточните, какую технику вы ищете (например, холодильник, стиральная машина), и я помогу с выбором! (Настроение: {label}, уверенность: {score:.2f})"
+                print(f"Matched appliance: {appliance} for query: {query}")
+                return f"{response} (Настроение: {label}, Confidence: {score:.2f})"
+        print(f"No appliance matched for query: {query}")
+        return f"Уточните, что вы ищете (например, холодильник, микроволновка), и я помогу с выбором!\n(Настроение: {label}, Confidence: {score:.2f})"
     except Exception as e:
-        logger.error(f"Ошибка в Hugging Face: {str(e)}")
-        return f"Ошибка: {str(e)}"
+        print(f"Error in Hugging Face: {str(e)}")
+        return f"Error: {str(e)}"
 
 # Клавиатуры
 def get_start_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="ℹ️ Рекомендации", callback_data="recommend_menu")],
+        [InlineKeyboardButton(text="ℹ Рекомендации", callback_data="recommend_menu")],
         [InlineKeyboardButton(text="❓ Спросить у бота", callback_data="ask_bot")],
         [InlineKeyboardButton(text="📍 Инфо", callback_data="info")]
     ])
 
 def get_recommend_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="❄️ Холодильники", callback_data="recommend_refrigerator")],
+        [InlineKeyboardButton(text="❄ Холодильники", callback_data="recommend_refrigerator")],
         [InlineKeyboardButton(text="🧼 Стиральные машины", callback_data="recommend_washing_machine")],
         [InlineKeyboardButton(text="🔥 Микроволновки", callback_data="recommend_microwave")],
         [InlineKeyboardButton(text="🧹 Пылесосы", callback_data="recommend_vacuum_cleaner")],
-        [InlineKeyboardButton(text="⬅️ Назад", callback_data="back_to_start")]
+        [InlineKeyboardButton(text="⬅ Назад", callback_data="back_to_start")]
     ])
 
 def get_brand_keyboard(appliance: str):
     brands = APPLIANCE_RECOMMENDATIONS.get(appliance, {})
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=f"🏷️ {brand}", callback_data=f"brand:{appliance}:{brand}")]
+        [InlineKeyboardButton(text=f"🏷 {brand}", callback_data=f"brand:{appliance}:{brand}")]
         for brand in brands.keys()
     ])
-    keyboard.inline_keyboard.append([InlineKeyboardButton(text="⬅️ Назад", callback_data="back_to_recommend")])
+    keyboard.inline_keyboard.append([InlineKeyboardButton(text="⬅ Назад", callback_data="back_to_recommend")])
     return keyboard
 
 # Обработчики
 @router.message(Command("start"))
 async def send_welcome(message: types.Message):
-    logger.info(f"User {message.from_user.id} started the bot")
+    print(f"User {message.from_user.id} started the bot")
     await message.reply(
         "Добро пожаловать в бот-консультант по бытовой технике! 🏠\n"
         "Я помогу выбрать технику или дам совет через умную систему рекомендаций.\n"
@@ -291,7 +285,7 @@ async def process_callback(callback_query: types.CallbackQuery, state: FSMContex
     elif data.startswith("recommend_"):
         appliance = data.replace("recommend_", "")
         if appliance not in APPLIANCE_RECOMMENDATIONS:
-            logger.error(f"Invalid appliance: {appliance}")
+            print(f"Invalid appliance: {appliance}")
             await callback_query.message.edit_text("Ошибка: категория не найдена.", reply_markup=get_recommend_keyboard())
             return
         await callback_query.message.edit_text(
@@ -303,7 +297,7 @@ async def process_callback(callback_query: types.CallbackQuery, state: FSMContex
         try:
             _, appliance, brand = data.split(":", 2)
             if appliance not in APPLIANCE_RECOMMENDATIONS or brand not in APPLIANCE_RECOMMENDATIONS[appliance]:
-                logger.error(f"Invalid appliance or brand: {appliance}, {brand}")
+                print(f"Invalid appliance or brand: {appliance}, {brand}")
                 await callback_query.message.edit_text("Ошибка: данные не найдены.", reply_markup=get_recommend_keyboard())
                 return
 
@@ -316,10 +310,10 @@ async def process_callback(callback_query: types.CallbackQuery, state: FSMContex
                 reply_markup=get_brand_keyboard(appliance)
             )
         except ValueError as e:
-            logger.error(f"Error parsing brand callback: {e}")
+            print(f"Error parsing brand callback: {e}")
             await callback_query.message.edit_text("Ошибка обработки запроса.", reply_markup=get_recommend_keyboard())
         except Exception as e:
-            logger.error(f"Error sending photo: {e}")
+            print(f"Error sending photo: {e}")
             await callback_query.message.edit_text("Ошибка при отправке изображения.", reply_markup=get_brand_keyboard(appliance))
 
     elif data == "ask_bot":
@@ -338,22 +332,22 @@ async def process_callback(callback_query: types.CallbackQuery, state: FSMContex
 @router.message(BotQuery.waiting_for_query)
 async def handle_bot_query(message: types.Message, state: FSMContext):
     if not message.text or len(message.text) > 500 or len(message.text.strip()) < 3:
-        logger.warning(f"Invalid bot query from user {message.from_user.id}: {message.text}")
+        print(f"Invalid bot query from user {message.from_user.id}: {message.text}")
         await message.reply("Введите осмысленный вопрос (от 3 символов, до 500 символов).", reply_markup=get_start_keyboard())
         return
-    logger.info(f"User {message.from_user.id} asked: {message.text}")
-    bot_response = await get_bot_response(message.text)
+    print(f"User {message.from_user.id} asked: {message.text}")
+    bot_response = await get_user_response(message.text)
     await message.reply(bot_response, reply_markup=get_start_keyboard())
     await state.clear()
 
 # Webhook настройка
 async def on_startup(bot: Bot):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-    logger.info(f"Webhook установлен на {WEBHOOK_URL}")
+    print(f"Webhook установлен на {WEBHOOK_URL}")
 
 async def on_shutdown(bot: Bot):
     await bot.delete_webhook()
-    logger.info("Webhook удален")
+    print("Webhook удален")
 
 # Роутинг и запуск
 if __name__ == '__main__':
