@@ -1,6 +1,7 @@
 import logging
 import os
 import aiohttp
+import aiogram
 from aiogram import Bot, Dispatcher, Router, types
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.filters import Command
