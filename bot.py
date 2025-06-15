@@ -1,11 +1,12 @@
 import logging
 import os
-import aiogram
+import aiohttp
 from aiogram import Bot, Dispatcher, Router, types
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from transformers import pipeline
 
 # Проверка версии aiogram
@@ -15,6 +16,10 @@ if not aiogram.__version__.startswith("3"):
 
 # Инициализация
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7808847944:AAFTrarhuICx5MrIndS4yu4CvfVEUVhGg5w")
+WEBHOOK_HOST = os.getenv("WEBHOOK_HOST")  # Например, https://your-service.onrender.com
+WEBHOOK_PATH = "/webhook"
+WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 router = Router()
@@ -340,7 +345,20 @@ async def handle_bot_query(message: types.Message, state: FSMContext):
     await message.reply(bot_response, reply_markup=get_start_keyboard())
     await state.clear()
 
+# Webhook настройка
+async def on_startup(bot: Bot):
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    logger.info(f"Webhook установлен на {WEBHOOK_URL}")
+
+async def on_shutdown(bot: Bot):
+    await bot.delete_webhook()
+    logger.info("Webhook удален")
+
 # Роутинг и запуск
 if __name__ == '__main__':
-    dp.include_router(router)
-    dp.run_polling(bot, skip_updates=True)
+    dp.startup.register(on_startup)
+    dp.shutdown.register(on_shutdown)
+    app = aiohttp.web.Application()
+    SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=WEBHOOK_PATH)
+    setup_application(app, dp, bot=bot)
+    aiohttp.web.run_app(app, host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
